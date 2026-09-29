@@ -17,6 +17,19 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(json.dumps({'message': 'Сохранено!'}).encode())
 
+    def do_GET(self):
+        try:
+            with open('data.txt', 'r', encoding='utf-8') as f:
+                content = f.read()
+        except FileNotFoundError:
+            content = ''
+
+        self.send_response(200)
+        self.send_header('Content-Type', 'application/json')
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.end_headers()
+        self.wfile.write(json.dumps({'content': content}).encode())
+
     def do_OPTIONS(self):
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
